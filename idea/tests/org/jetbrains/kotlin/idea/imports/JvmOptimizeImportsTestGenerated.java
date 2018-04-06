@@ -135,6 +135,12 @@ public class JvmOptimizeImportsTestGenerated extends AbstractJvmOptimizeImportsT
             doTest(fileName);
         }
 
+        @TestMetadata("retainDefaultImportWithUsageInType.kt")
+        public void testRetainDefaultImportWithUsageInType() throws Exception {
+            String fileName = KotlinTestUtils.navigationMetadata("idea/testData/editor/optimizeImports/jvm/retainDefaultImportWithUsageInType.kt");
+            doTest(fileName);
+        }
+
         @TestMetadata("SamConstructor.kt")
         public void testSamConstructor() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("idea/testData/editor/optimizeImports/jvm/SamConstructor.kt");

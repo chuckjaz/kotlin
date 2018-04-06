@@ -27,9 +27,11 @@ import org.jetbrains.kotlin.idea.resolve.frontendService
 import org.jetbrains.kotlin.idea.util.ImportInsertHelper
 import org.jetbrains.kotlin.idea.util.getResolutionScope
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+import org.jetbrains.kotlin.kdoc.psi.impl.KDocName
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.psiUtil.getStrictParentOfType
 import org.jetbrains.kotlin.renderer.render
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.BindingTraceContext
@@ -109,8 +111,10 @@ class OptimizedImportsBuilder(
             parent is KtQualifiedExpression && element == parent.selectorExpression -> parent
             parent is KtCallExpression && element == parent.calleeExpression -> getExpressionToAnalyze(parent)
             parent is KtOperationExpression && element == parent.operationReference -> parent
-            parent is KtUserType -> null //TODO: is it always correct?
-            else -> element as? KtExpression //TODO: what if not expression? Example: KtPropertyDelegationMethodsReference
+            element is KtExpression -> element
+            element is KtPropertyDelegate -> element.getStrictParentOfType<KtProperty>()
+            element is KDocName -> element.getContainingDoc().getOwner()
+            else -> element.getStrictParentOfType()
         }
     }
 
